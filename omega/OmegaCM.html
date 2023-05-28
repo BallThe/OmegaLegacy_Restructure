@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./OmegaCM.js"></script>
+    <title>Omega Chart Maker v0.0.-1</title>
+</head>
+
+<body>
+    <style>
+        #left {
+            width: 28vw;
+            margin: 0px 15px 0px 35px;
+            float: left;
+        }
+
+        #edit {
+            height: 85vh;
+            padding: 0px 15px 0px 30px;
+            background-color: lightgray;
+            border: 2px solid #000;
+        }
+
+        #preview {
+            width: 25vw;
+            height: 93vh;
+            margin: 20px 0px 0px 15px;
+            padding: 0px 15px 0px 30px;
+            border: 2px solid #000;
+            float: left;
+        }
+
+        #right {
+            float: left;
+            height: 93vh;
+            width: 34vw;
+            margin: 20px 0px 0px 30px;
+            border: 2px solid #000;
+            background-color: whitesmoke;
+        }
+
+        #settings {
+            padding-left: 30px;
+            height: 20vh;
+            border-bottom: 2px solid #000;
+        }
+
+        #event {
+            padding-left: 30px;
+        }
+
+        #events {
+            height: 60vh;
+            background-color: rgb(221, 218, 218);
+            margin-right: 30px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        span {
+            font-size: 23px;
+            margin-right: 3px;
+        }
+
+        button {
+            font-size: 18px;
+            margin-left: 7px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .text {
+            height: 23px;
+            padding-top: 2px;
+            margin-left: 7px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .title {
+            margin: 15px 5px 15px 0px;
+            font-size: 30px;
+        }
+
+        .title2 {
+            margin: 0 0 0 0;
+            padding: 15px 0px 15px 0px;
+            font-size: 30px;
+        }
+
+        .event {
+            width: 88%;
+            background-color: rgb(238, 238, 238);
+            border: 3px ridge;
+            height: 35px;
+            margin: 0px 15px 0 17px;
+            padding-left: 20px;
+            padding-top: 10px;
+        }
+
+        .addevent {
+            height: 80px;
+            width: 88%;
+            background-color: rgb(238, 238, 238);
+            border: 3px ridge;
+            margin: 15px 15px 15px 17px;
+            padding-left: 20px;
+            padding-top: 20px;
+        }
+
+        .bluebtn {
+            font-size: 25px;
+            background-color: lightskyblue;
+            border: outset 3px;
+            color: #fff;
+            border-radius: 15%;
+        }
+
+        .redbtn {
+            font-size: 18px;
+            background-color: rgb(250, 135, 135);
+            border: outset 3px;
+            color: #fff;
+            border-radius: 15%;
+        }
+
+        .event div {
+            float: left;
+            width: 32%;
+            font-size: 18px;
+        }
+
+    </style>
+    <div id="left">
+        <h1>Omega Chart Maker v0.0.-1</h1>
+        <div id="edit">
+            <h2 class="title">编辑区域 Edit</h2>
+            <span>歌曲路径</span><input id="songpath" type="text" class="text" style="width:220px" placeholder="歌曲路径" onchange="songImport()">
+            <p></p>
+            <span>歌曲名</span><input type="text" class="text" placeholder="歌曲名">
+            <p></p>
+            <span>歌曲BPM</span><input id="bpminput" type="number" class="text" style="width:80px" placeholder="BPM"
+                onchange="noZero('bpminput')">
+            <p></p>
+            <span>歌曲偏移</span><input id="offsetinput" type="number" class="text" style="width:80px" placeholder="偏移"
+                onchange="noZero('offsetinput')">
+            <p></p>
+        </div>
+    </div>
+    <div id="preview">
+        <h2 class="title" style="margin-bottom: 0;">预览区域 Preview</h2>
+        <canvas id="canvas" height="684" width="405"></canvas>
+    </div>
+    <div id="right">
+        <div id="settings">
+            <h2 class="title2">预览设置 Preview Settings</h2>
+            <span>节拍细分</span>
+            <input id="subinput" type="number" class="text" style="width:70px;" onchange="noZero('subinput')"
+                placeholder="拍数">
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;自动播放&nbsp;[开启]</span>
+        </div>
+        <div id="event">
+            <h2 class="title2">事件 Events</h2>
+            <div id="events">
+                <div class="addevent">
+                    <div style="float:left">
+                        <span>时间</span><input id="timeinput" type="number" class="text" style="width:180px"
+                            onchange="noZero('timeinput')" placeholder="时间"><br>
+                        <span>速度</span><input id="speedinput" type="number" class="text" style="width:180px"
+                            onchange="noZero('speedinput')" placeholder="速度">
+                    </div>
+                    <div style="float:right;margin-right: 60px;margin-top: 10px;">
+                        <button id="eventadd" class="bluebtn" onclick="eventAppend()">添加</button>
+                    </div>
+                </div>
+                <div class="event">
+                    <div>时间</div>
+                    <div>速度</div>
+                    <div>操作</div>
+                </div>
+                <div class="event" id="spd0">
+                    <div>0</div>
+                    <div>1</div>
+                    <button class="redbtn" style="background-color: gray;">删除</button>
+                    <button class="bluebtn" style="font-size:18px;background-color: gray;">修改</button>
+                </div>
+                <div id="eventsList"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

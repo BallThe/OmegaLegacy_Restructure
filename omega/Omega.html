@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omega v0.0.-1</title>
+  <script src="Omega.js"></script>
+</head>
+
+<body>
+  <button id="start" onclick="main()" type="button">START</button>
+  <button onclick="pause()" type="button"><span id="pause">PAUSE</span></button>
+  <input type="checkbox" id="autoplay"><span>AutoPlay</span>
+  <br>
+  <select id="openFile" title="1">
+    <option>Stasis</option>
+    <option>Mujinku-Vacuum-Track_ADD8E6-</option>
+  </select> <br>
+  <span>Offset </span><input type="number" id="offset" value="0" pattern=""> <br>
+  <span id="time">Time: 0</span>
+
+  <center>
+    <canvas id="canvas" width="405" height="684"></canvas>
+  </center>
+
+</body>
+
+</html>
