@@ -3,4 +3,4 @@
 
 这是Omega的测试版本，未对外开放
 
-———BallThe
+This is the test version of Omega, non-public
