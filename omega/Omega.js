@@ -38,7 +38,6 @@ function parseChart(chart) {
         if (i == chartInfo.length - 1) chart["total_time"] = time;
     }
     speeds[0] = [0, speeds[0][1]];
-    speeds.push([parseInt(chart["time"]) + 1000, 1])
     chart["speeds"] = speeds;
 
     let taps = [[], [], [], []];
@@ -205,7 +204,7 @@ function game(time, taps, holds, speeds, liney, hit, autoplay, bpmms, substart, 
     let lineImg = newImage("../imgs/line"+notetype+".png");
     let tapImg = newImage("../imgs/tap"+notetype+".png");
     let holdImg = newImage("../imgs/hold"+notetype+".png");
-    let subLineImg = newImage("../imgs/subLine"+notetype+".png")
+    let subLineImg = newImage("../imgs/subLine"+notetype+"-0.png");
 
     // 画笔对象
     var ctx = document.getElementById("canvas").getContext("2d");
@@ -225,7 +224,7 @@ function main() {
     let music = new Audio(`../audio/${document.getElementById("openFile").value}.mp3`);
 
     // 获取打击音效
-    hit = new Audio("../audio/hit.wav");
+    var hit = new Audio("../audio/hit.wav");
 
     // 自动播放
     let auto = document.getElementById("autoplay").checked;
@@ -237,6 +236,8 @@ function main() {
 
     // 音乐加载完成
     music.addEventListener("canplaythrough", event => {
+        chart["time"] = parseInt(music.duration)*1000;
+        chart["speeds"].push([parseInt(chart["time"]) + 1000, 1]);
         // 播放音乐
         music.play();
         // 主程序

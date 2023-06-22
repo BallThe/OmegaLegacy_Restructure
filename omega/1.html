@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>播放本地的音频文件</title>
+</head>
+
+<body>
+    <h3>
+        <center>本地的音频播放测试<center>
+    </h3>
+    <hr color="#666666">
+    <button onclick="reduceFraction(9,3)">1</button>
+    <br />
+    <!-- <audio id="audio_id" controls autoplay loop>你的浏览器不能支持HTML5音频 </audio> -->
+    <script>
+        function reduceFraction(numerator, denominator) {
+            var gcd = 1;
+            var smaller = Math.min(numerator, denominator);
+            for (var i = 2; i <= smaller; i++) {
+                if (numerator % i === 0 && denominator % i === 0) {
+                    gcd = i;
+                }
+            }
+            // return [numerator / gcd, denominator / gcd];
+            console.log([numerator / gcd, denominator / gcd])
+        }
+    </script>
+</body>
+
+</html>

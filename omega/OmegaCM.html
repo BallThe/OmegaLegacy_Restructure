@@ -133,12 +133,18 @@
             font-size: 18px;
         }
 
+        .file {
+            font-size:16px;
+            margin-left: 10px;
+            width: 250px;
+        }
+
     </style>
     <div id="left">
         <h1>Omega Chart Maker v0.0.-1</h1>
         <div id="edit">
             <h2 class="title">编辑区域 Edit</h2>
-            <span>歌曲路径</span><input id="songpath" type="text" class="text" style="width:220px" placeholder="歌曲路径" onchange="songImport()">
+            <span>音乐文件</span><input id="songfile" type="file" class="file" onchange="songImport()">
             <p></p>
             <span>歌曲名</span><input type="text" class="text" placeholder="歌曲名">
             <p></p>
@@ -148,6 +154,7 @@
             <span>歌曲偏移</span><input id="offsetinput" type="number" class="text" style="width:80px" placeholder="偏移"
                 onchange="noZero('offsetinput')">
             <p></p>
+            <button id="pausechange" class="redbtn" style="font-size: 25px; display:none" onclick="changePause()">暂停</button>
         </div>
     </div>
     <div id="preview">
