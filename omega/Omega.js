@@ -69,48 +69,28 @@ function parseChart(chart) {
     return chart;
 }
 
-function getY(time, speeds, hittime, liney) {
-    // 设置标识符
-    let flag = [false, false];
-    // 获取当前时间的速度和音符所在时间的速度
-    for (let k = speeds.length - 1; k >= 0; k--) {
-        // 当前时间的速度
-        if (speeds[k][0] <= time && !flag[0]) {
-            var time_speed = speeds[k][1];
-            var time_speedindex = k;
-            flag[0] = true;
-        }
-        // 当前音符所在时间的速度
-        if (speeds[k][0] <= hittime && !flag[1]) {
-            var note_speed = speeds[k][1];
-            var note_speedtime = speeds[k][0];
-            var note_speedindex = k;
-            flag[1] = true;
-        }
-        if (flag[0] && flag[1]) {
-            break;
-        }
-    }
-
-    // 推出y值
+function _gety(i, time, liney, speeds) {
     let y = 0;
-    // 当时间和音符都在一个速度阶段的时候
-    if (time_speedindex == note_speedindex) {
-        y = (hittime - note_speedtime - (time - note_speedtime)) * note_speed;
-    } else { // 当不在一个速度阶段的时候
-        if (time_speedindex + 1 != note_speedindex) {
-            // 计算所有中间的速度段所占的高度
-            for (let i = time_speedindex + 1; i < note_speedindex; i++) {
-                y += speeds[i][0] * speeds[i][1];
-            }
+    for (let j = 0; j < i; j++) y -= (speeds[j + 1][0] - speeds[j][0]) * speeds[j][1];
+    y -= (time - speeds[i][0]) * speeds[i][1] - liney;
+    return y;
+}
+function getY(time, speeds, hittime, liney) {
+    let flag = [false, false];
+    let hity = 0;
+    let timey = 0;
+    for (let i = speeds.length - 1; i >= 0; i--) {
+        if (speeds[i][0] <= hittime && !flag[0]) {
+            hity = _gety(i, hittime, liney, speeds);
+            flag[0] = !flag[0];
         }
-        // console.log(flag, time_speedindex, note_speedindex)
-        // 加上时间和音符所在的速度段高度
-        y += (speeds[time_speedindex + 1][0] - time) * time_speed;
-        y += (hittime - note_speedtime) * note_speed;
+        if (speeds[i][0] <= time && !flag[1]) {
+            timey = _gety(i, time, liney, speeds);
+            flag[1] = !flag[1];
+        }
+        if (flag[0] && flag[1]) break;
     }
-    // 判定线高度
-    y = liney - y;
+    let y = hity - timey + liney;
     return y;
 }
 

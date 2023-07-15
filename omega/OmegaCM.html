@@ -134,41 +134,67 @@
         }
 
         .file {
-            font-size:16px;
+            font-size: 16px;
             margin-left: 10px;
             width: 250px;
         }
-
     </style>
     <div id="left">
+
         <h1>Omega Chart Maker v0.0.-1</h1>
+
         <div id="edit">
             <h2 class="title">编辑区域 Edit</h2>
-            <span>音乐文件</span><input id="songfile" type="file" class="file" onchange="songImport()">
+            <span>导入</span>
+            <input type="radio" name="inputfilemode" checked onchange="inputModeChange()"
+                id="inputfilemode1"><span>&nbsp;音乐文件</span>
+            <input type="radio" name="inputfilemode" id="inputfilemode2"
+                onchange="inputModeChange()"><span>&nbsp;谱面文件</span>
             <p></p>
-            <span>歌曲名</span><input type="text" class="text" placeholder="歌曲名">
+            <input id="inputfile" type="file" accept="audio/*" class="file" onchange="fileImport(true)">
+            <p></p>
+            <span style="display: none;" id="timeshow"></span>
+            <p></p>
+            <input type="range" id="timerange" step="1" style="width:20vw;display: none;">
+            <p></p>
+            <span>歌曲名</span><input id="nameinput" type="text" class="text" placeholder="歌曲名">
             <p></p>
             <span>歌曲BPM</span><input id="bpminput" type="number" class="text" style="width:80px" placeholder="BPM"
                 onchange="noZero('bpminput')">
             <p></p>
-            <span>歌曲偏移</span><input id="offsetinput" type="number" class="text" style="width:80px" placeholder="偏移"
+            <span>歌曲偏移(ms)</span><input id="offsetinput" type="number" class="text" style="width:80px" placeholder="偏移"
                 onchange="noZero('offsetinput')">
             <p></p>
-            <button id="pausechange" class="redbtn" style="font-size: 25px; display:none" onclick="changePause()">暂停</button>
+            <span>小节线偏移(ms)</span><input id="substartinput" type="number" class="text" style="width:120px"
+                placeholder="小节线偏移" onchange="noZero('substartinput')">
+            <p></p>
+            <button id="pausechange" class="redbtn" style="font-size: 25px; display:none"
+                onclick="changePause()">暂停</button>
+            <p></p>
+            <button id="pushout" class="bluebtn"
+                style="background-color: limegreen; display: none;">创作完了！导出谱面文件！</button>
         </div>
     </div>
+
     <div id="preview">
         <h2 class="title" style="margin-bottom: 0;">预览区域 Preview</h2>
         <canvas id="canvas" height="684" width="405"></canvas>
     </div>
+
     <div id="right">
+
         <div id="settings">
             <h2 class="title2">预览设置 Preview Settings</h2>
             <span>节拍细分</span>
             <input id="subinput" type="number" class="text" style="width:70px;" onchange="noZero('subinput')"
                 placeholder="拍数">
-            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;自动播放&nbsp;[开启]</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;自动播放</span>
+            <button id="autoplay" class="redbtn" onclick="autoplayChange(false)">关闭</button>
+            <p></p>
+            <span>倍速</span><input type="number" id="playbackspeedinput" class="text" style="width: 70px;"
+                onchange="noZero('playbackspeedinput')" step="0.1">
         </div>
+
         <div id="event">
             <h2 class="title2">事件 Events</h2>
             <div id="events">
@@ -183,18 +209,21 @@
                         <button id="eventadd" class="bluebtn" onclick="eventAppend()">添加</button>
                     </div>
                 </div>
+
                 <div class="event">
                     <div>时间</div>
                     <div>速度</div>
                     <div>操作</div>
                 </div>
-                <div class="event" id="spd0">
-                    <div>0</div>
-                    <div>1</div>
-                    <button class="redbtn" style="background-color: gray;">删除</button>
-                    <button class="bluebtn" style="font-size:18px;background-color: gray;">修改</button>
+
+                <div id="eventsList">
+                    <!-- <div class="event" id="spd0">
+                        <div>0</div>
+                        <div>1</div>
+                        <button class="redbtn" style="background-color: gray;">删除</button>
+                        <button class="bluebtn" style="font-size:18px;" onclick="eventModify(0)">修改</button>
+                    </div> -->
                 </div>
-                <div id="eventsList"></div>
             </div>
         </div>
     </div>
