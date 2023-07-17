@@ -30,6 +30,8 @@ var chart = {
 var tapTouch = [[], [], [], []];
 var isPausing = false;
 var isAutoplay = true;
+var mouseX = 0;
+var mouseY = 0;
 
 // 检查所有的输入框是否有非法情况
 window.onload = () => {
@@ -261,6 +263,19 @@ function getY(time, speeds, hittime, liney) {
     let y = hity - timey + liney;
     return y;
 }
+function getYTime(y, speeds, time) {
+    let speedspx = [];
+    for (let i = 0; i < speeds.length; i++) {
+        speedspx.push(getY(time, speeds, speeds[i][0], 500));
+    }
+    let ytime = [];
+    for (let i = 0; i < speedspx.length; i++) {
+        if ((speedspx[i] >= y && speedspx[i + 1] <= y) || (speedspx[i] <= y && speedspx[i + 1] >= y)) {
+            ytime.push((speedspx[i] - y) / speeds[i][1]);
+        }
+    }
+    return ytime;
+}
 
 function drawLine(ctx, lineImg) {
     // 画四个判定条
@@ -374,24 +389,18 @@ function drawHold(ctx, holdImg, time, holdTimeAry, speeds, liney, autoplay, hit)
     }
 }
 
+function drawMousePos(ctx, mouseImg) {
+    if (mouseX >= 565.709 && mouseY >= 84.788 && mouseX <= 565.709 + 405 && mouseY <= 684 + 84.788) {
+        ctx.drawImage(mouseImg, mouseX - 565.709, 0, 5, 684);
+        ctx.drawImage(mouseImg,0,mouseY - 84.788);
+        // ctx.drawtet
+    }
+}
+
 function autoplayChange(isAuto) {
     if (!isAuto) document.getElementById("autoplay").outerHTML = `<button id="autoplay" class="bluebtn" style="font-size: 18px;" onclick="autoplayChange(true)">开启</button>`;
     else document.getElementById("autoplay").outerHTML = `<button id="autoplay" class="redbtn" onclick="autoplayChange(false)">关闭</button>`;
     isAutoplay = isAuto;
-}
-
-function getYTime(y, speeds, time) {
-    let yTotal = getY(time, speeds, 0, 0);
-    let speedspx = [yTotal];
-    for (let i = 0; i < speeds.length - 1; i++) {
-        speedspx.push(speedspx[i] - (speeds[i + 1][0] - speeds[i][0]) * speeds[i][1] + yTotal);
-    }
-    console.log(speedspx);
-    for (let i = 0; i < speedspx.length - 1; i++) {
-        if ((speedspx[i] > y && y > speedspx[i + 1]) || (speeds[i] < y && y < speedspx[i + 1])) {
-            return speeds[i][0] + (speedspx[i] + y) / speeds[i][1];
-        }
-    }
 }
 
 function game(time, taps, holds, speeds, liney, hit, autoplay, bpmms, substart, time_all, tapTocuh, notetype) {
@@ -399,6 +408,7 @@ function game(time, taps, holds, speeds, liney, hit, autoplay, bpmms, substart, 
     let lineImg = newImage("../imgs/line" + notetype + ".png");
     let tapImg = newImage("../imgs/tap" + notetype + ".png");
     let holdImg = newImage("../imgs/hold" + notetype + ".png");
+    let mouseImg = newImage("../imgs/mouseLine.png");
     let subLines = [];
     for (let i = 0; i <= 4; i++) subLines.push(newImage(`../imgs/subLine${notetype}-${i}.png`));
 
@@ -409,6 +419,7 @@ function game(time, taps, holds, speeds, liney, hit, autoplay, bpmms, substart, 
     drawSubLine(ctx, time, bpmms, substart, speeds, time_all, subLines);
     drawHold(ctx, holdImg, time, holds, speeds, liney, autoplay, hit);
     drawTap(ctx, tapImg, time, taps, speeds, liney, autoplay, hit, tapTocuh);
+    drawMousePos(ctx, mouseImg)
 }
 
 function main() {
@@ -452,3 +463,8 @@ function main() {
 window.onkeydown = (key) => {
     if (key.keyCode == 32) changePause();
 }
+window.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+})
+// x = 565.709 y = 84.788
