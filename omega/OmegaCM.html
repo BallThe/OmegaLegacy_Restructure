@@ -11,50 +11,115 @@
 
 <body>
     <style>
-        #left {
-            width: 28vw;
-            margin: 0px 15px 0px 35px;
-            float: left;
+        html {
+            overflow: hidden;
         }
 
-        #edit {
-            height: 85vh;
-            padding: 0px 15px 0px 30px;
-            background-color: lightgray;
-            border: 2px solid #000;
+        .container {
+            padding-top: 50px;
+        }
+
+        .big-title {
+            position: absolute;
+            color: whitesmoke;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 40px;
+            padding: 10px;
+            z-index: 5;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            border-radius: 5px;
+        }
+
+        #edit-container {
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 10px;
+            margin: 0;
+            background-color: rgb(55, 55, 55);
+            color: rgb(218, 218, 218);
+            z-index: 5;
+            opacity: 0;
+            transition: all 0.5s ease;
+            white-space: nowrap;
+        }
+
+        #edit-container:hover {
+            opacity: 1;
+            width: 350px;
+            padding: 10px;
+            padding-top: 0;
+            padding-left: 20px !important;
+            transition: all 0.5s ease;
         }
 
         #preview {
-            width: 25vw;
-            height: 93vh;
-            margin: 20px 0px 0px 15px;
+            text-align: center;
+            background-color: rgb(39, 39, 39);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
             padding: 0px 15px 0px 30px;
             border: 2px solid #000;
             float: left;
         }
 
-        #right {
-            float: left;
-            height: 93vh;
-            width: 34vw;
-            margin: 20px 0px 0px 30px;
-            border: 2px solid #000;
-            background-color: whitesmoke;
+        #preview canvas {
+            position: fixed;
+            top: 55px;
+        }
+
+        #settings-container {
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 10px;
+            margin: 0;
+            color: whitesmoke;
+            background-color: rgb(34, 34, 34);
+            opacity: 0;
+            z-index: 5;
+            transition: all 0.5s ease;
+        }
+
+        #settings-container:hover {
+            white-space: nowrap;
+            opacity: 1;
+            width: 500px;
+            transition: all 0.5s ease;
         }
 
         #settings {
+            white-space: nowrap;
             padding-left: 30px;
-            height: 20vh;
+            height: 25vh;
             border-bottom: 2px solid #000;
         }
 
         #event {
+            white-space: nowrap;
+            color: whitesmoke;
+            background-color: rgb(30, 30, 30);
             padding-left: 30px;
         }
 
         #events {
+            /* white-space: nowrap; */
+            background-color: rgb(55, 55, 55);
             height: 60vh;
-            background-color: rgb(221, 218, 218);
             margin-right: 30px;
             overflow-y: auto;
             overflow-x: hidden;
@@ -93,19 +158,18 @@
 
         .event {
             width: 88%;
-            background-color: rgb(238, 238, 238);
-            border: 3px ridge;
+            background-color: rgb(86,86,86);
             height: 35px;
             margin: 0px 15px 0 17px;
             padding-left: 20px;
             padding-top: 10px;
+            z-index: 6;
         }
 
         .addevent {
             height: 80px;
             width: 88%;
-            background-color: rgb(238, 238, 238);
-            border: 3px ridge;
+            background-color: rgb(86, 86, 86);
             margin: 15px 15px 15px 17px;
             padding-left: 20px;
             padding-top: 20px;
@@ -114,17 +178,18 @@
         .bluebtn {
             font-size: 25px;
             background-color: lightskyblue;
-            border: outset 3px;
+            border-radius: 10px;
+            border: none;
             color: #fff;
-            border-radius: 15%;
+            height: fit-content;
         }
 
         .redbtn {
-            font-size: 18px;
+            font-size: 20px;
             background-color: rgb(250, 135, 135);
-            border: outset 3px;
+            border: none;
             color: #fff;
-            border-radius: 15%;
+            border-radius: 8px;
         }
 
         .event div {
@@ -134,95 +199,96 @@
         }
 
         .file {
-            font-size: 16px;
+            font-size: 20px;
             margin-left: 10px;
             width: 250px;
+            padding: 1px;
+            margin-left: -4px;
         }
     </style>
-    <div id="left">
-
-        <h1>Omega Chart Maker</h1>
-
-        <div id="edit">
-            <h2 class="title">编辑区域 Edit</h2>
-            <span>导入</span>
-            <input type="radio" name="inputfilemode" checked onchange="inputModeChange()"
-                id="inputfilemode1"><span>&nbsp;音乐文件</span>
-            <input type="radio" name="inputfilemode" id="inputfilemode2"
-                onchange="inputModeChange()"><span>&nbsp;谱面文件</span>
-            <p></p>
-            <input id="inputfile" type="file" accept="audio/*" class="file" onchange="fileImport(true)">
-            <p></p>
-            <span style="display: none;" id="timeshow"></span>
-            <p></p>
-            <input type="range" id="timerange" step="1" style="width:20vw;display: none;">
-            <p></p>
-            <span>歌曲名</span><input id="nameinput" type="text" class="text" placeholder="歌曲名">
-            <p></p>
-            <span>歌曲BPM</span><input id="bpminput" type="number" class="text" style="width:80px" placeholder="BPM"
-                onchange="noZero('bpminput')">
-            <p></p>
-            <span>歌曲偏移(ms)</span><input id="offsetinput" type="number" class="text" style="width:80px" placeholder="偏移"
-                onchange="noZero('offsetinput')">
-            <p></p>
-            <span>小节线偏移(ms)</span><input id="substartinput" type="number" class="text" style="width:120px"
-                placeholder="小节线偏移" onchange="noZero('substartinput')">
-            <p></p>
-            <button id="pausechange" class="redbtn" style="font-size: 25px; display:none"
-                onclick="changePause()">暂停</button>
-            <p></p>
-            <button id="pushout" class="bluebtn"
-                style="background-color: limegreen; display: none;">创作完了！导出谱面文件！</button>
-        </div>
-    </div>
-
-    <div id="preview">
-        <h2 class="title" style="margin-bottom: 0;">预览区域 Preview</h2>
-        <canvas id="canvas" height="684" width="405"></canvas>
-    </div>
-
-    <div id="right">
-
-        <div id="settings">
-            <h2 class="title2">预览设置 Preview Settings</h2>
-            <span>节拍细分</span>
-            <input id="subinput" type="number" class="text" style="width:70px;" onchange="noZero('subinput')"
-                placeholder="拍数">
-            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;自动播放</span>
-            <button id="autoplay" class="redbtn" onclick="autoplayChange(false)">关闭</button>
-            <p></p>
-            <span>倍速</span><input type="number" id="playbackspeedinput" class="text" style="width: 70px;"
-                onchange="noZero('playbackspeedinput')" step="0.1">
+    <div class="container">
+        <div class="big-title">Omega Chart Maker</div>
+        <div id="edit-container">
+            <div id="edit">
+                <h2 class="title">编辑区域 Edit</h2>
+                <span>导入</span>
+                <input type="radio" name="inputfilemode" checked onchange="inputModeChange()"
+                    id="inputfilemode1"><span>&nbsp;音乐文件</span>
+                <input type="radio" name="inputfilemode" id="inputfilemode2"
+                    onchange="inputModeChange()"><span>&nbsp;谱面文件</span>
+                <p></p>
+                <input id="inputfile" type="file" accept="audio/*" class="file" onchange="fileImport(true)">
+                <p></p>
+                <span style="display: none;" id="timeshow"></span>
+                <p></p>
+                <input type="range" id="timerange" step="1" style="width:20vw;display: none;">
+                <p></p>
+                <span>歌曲名</span><input id="nameinput" type="text" class="text" placeholder="歌曲名">
+                <p></p>
+                <span>歌曲BPM</span><input id="bpminput" type="number" class="text" style="width:80px" placeholder="BPM"
+                    onchange="noZero('bpminput')">
+                <p></p>
+                <span>歌曲偏移(ms)</span><input id="offsetinput" type="number" class="text" style="width:80px"
+                    placeholder="偏移" onchange="noZero('offsetinput')">
+                <p></p>
+                <span>小节线偏移(ms)</span><input id="substartinput" type="number" class="text" style="width:120px"
+                    placeholder="小节线偏移" onchange="noZero('substartinput')">
+                <p></p>
+                <button id="pausechange" class="redbtn" style="font-size: 25px; display:none"
+                    onclick="changePause()">暂停</button>
+                <p></p>
+                <button id="pushout" class="bluebtn"
+                    style="background-color: limegreen; display: none;">创作完了！导出谱面文件！</button>
+            </div>
         </div>
 
-        <div id="event">
-            <h2 class="title2">事件 Events</h2>
-            <div id="events">
-                <div class="addevent">
-                    <div style="float:left">
-                        <span>时间</span><input id="timeinput" type="number" class="text" style="width:180px"
-                            onchange="noZero('timeinput')" placeholder="时间"><br>
-                        <span>速度</span><input id="speedinput" type="number" class="text" style="width:180px"
-                            onchange="noZero('speedinput')" placeholder="速度">
-                    </div>
-                    <div style="float:right;margin-right: 60px;margin-top: 10px;">
+        <div id="preview">
+            <canvas id="canvas" height="684" width="405"></canvas>
+        </div>
+
+        <div id="settings-container">
+
+            <div id="settings">
+                <h2 class="title2">预览设置 Preview Settings</h2>
+                <span>节拍细分</span>
+                <input id="subinput" type="number" class="text" style="width:70px;" onchange="noZero('subinput')"
+                    placeholder="拍数">
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;自动播放</span>
+                <button id="autoplay" class="redbtn" onclick="autoplayChange(false)">关闭</button>
+                <p></p>
+                <span>倍速</span><input type="number" id="playbackspeedinput" class="text" style="width: 70px;"
+                    onchange="noZero('playbackspeedinput')" step="0.1">
+            </div>
+
+            <div id="event">
+                <h2 class="title2">事件 Events</h2>
+                <div id="events">
+                    <div class="addevent">
+                        <div style="float:left">
+                            <span>时间</span><input id="timeinput" type="number" class="text" style="width:180px"
+                                onchange="noZero('timeinput')" placeholder="时间"><br>
+                            <span>速度</span><input id="speedinput" type="number" class="text" style="width:180px"
+                                onchange="noZero('speedinput')" placeholder="速度">
+                        </div>
+                        <!-- <div style="float:right;margin-right: 60px;margin-top: 10px;"> -->
                         <button id="eventadd" class="bluebtn" onclick="eventAppend()">添加</button>
+                        <!-- </div> -->
                     </div>
-                </div>
 
-                <div class="event">
-                    <div>时间</div>
-                    <div>速度</div>
-                    <div>操作</div>
-                </div>
+                    <div class="event">
+                        <div>时间</div>
+                        <div>速度</div>
+                        <div>操作</div>
+                    </div>
 
-                <div id="eventsList">
-                    <!-- <div class="event" id="spd0">
+                    <div id="eventsList">
+                        <!-- <div class="event" id="spd0">
                         <div>0</div>
                         <div>1</div>
                         <button class="redbtn" style="background-color: gray;">删除</button>
                         <button class="bluebtn" style="font-size:18px;" onclick="eventModify(0)">修改</button>
                     </div> -->
+                    </div>
                 </div>
             </div>
         </div>

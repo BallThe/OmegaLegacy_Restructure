@@ -9,6 +9,10 @@ var zeroTest = {
     "playbackspeedinput": [1, true, false, false],
 }
 
+// 定义画布宽高
+var canvasHeight = 684;
+var canvasWidth = 405;
+
 // 定义音频
 var music = new Audio();
 
@@ -287,11 +291,7 @@ function drawLine(ctx, lineImg) {
 function getSub(numerator, denominator) {
     var gcd = 1;
     var smaller = Math.min(numerator, denominator);
-    for (var i = 2; i <= smaller; i++) {
-        if (numerator % i === 0 && denominator % i === 0) {
-            gcd = i;
-        }
-    }
+    for (var i = 2; i <= smaller; i++) if (numerator % i === 0 && denominator % i === 0) gcd = i;
     let res = denominator / gcd;
     // return [numerator / gcd, denominator / gcd];
     if (res != 1 && res != 2 && res != 4 && res != 8) res = 0;
@@ -322,9 +322,7 @@ function drawSubLine(ctx, time, bpmms, substart, speeds, time_all, subLines) {
     // 7 > [1,0,0,0,0,0,0]
     // 8 > [1,0,4,0,2,0,4,0] 1/8 = 1/8(0); 2/8 = 1/4(4); 
     let subList = [];
-    for (let i = 1; i <= subs; i++) {
-        subList.unshift(getSub(i, subs));
-    }
+    for (let i = 1; i <= subs; i++) subList.unshift(getSub(i, subs));
     // console.log(parseInt((time_all - substart) / (bpmms * 4) * subs))
     for (let i = 0; i < parseInt((time_all - substart) / (bpmms * 4) * subs); i++) {
         let subCode = subList[i % subs];
@@ -414,7 +412,7 @@ function game(time, taps, holds, speeds, liney, hit, autoplay, bpmms, substart, 
 
     // 画笔对象
     var ctx = document.getElementById("canvas").getContext("2d");
-    ctx.clearRect(0, 0, 405, 684);
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     drawLine(ctx, lineImg);
     drawSubLine(ctx, time, bpmms, substart, speeds, time_all, subLines);
     drawHold(ctx, holdImg, time, holds, speeds, liney, autoplay, hit);
